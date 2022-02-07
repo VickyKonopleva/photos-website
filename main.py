@@ -27,20 +27,7 @@ login_manager.init_app(app)
 gravatar = Gravatar(app, size=100, rating='g', default='retro', force_default=False, force_lower=False, use_ssl=False, base_url=None)
 
 ##CONNECT TO DB
-
-URL=os.environ.get('DATABASE_URL')
-
-try:
-    URL1 = URL.split(':')[0]
-    URL2 = URL.split(':')[1]
-    URL1 = URL1 + 'ql'
-    URL = URL1 + URL2
-    DATABASE_URL=URL
-except:
-    pass
-
-
-
+#'DATABASE_URL' set as a local env var
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL',  "sqlite:///blog.db")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
