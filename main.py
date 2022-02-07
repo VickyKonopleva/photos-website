@@ -35,6 +35,7 @@ try:
     URL2 = URL.split(':')[1]
     URL1 = URL1 + 'ql'
     URL = URL1 + URL2
+    DATABASE_URL=URL
 except:
     pass
 
