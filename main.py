@@ -27,8 +27,15 @@ login_manager.init_app(app)
 gravatar = Gravatar(app, size=100, rating='g', default='retro', force_default=False, force_lower=False, use_ssl=False, base_url=None)
 
 ##CONNECT TO DB
-#'DATABASE_URL' set as a local env var
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL',  "sqlite:///blog.db")
+#weather database is set localy or it's PosgresDB on Heroku
+uri = os.getenv("DATABASE_URL")
+if uri and uri.startswith("postgres://"):
+    print(uri)
+    uri = uri.replace("postgres://", "postgresql://", 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = uri
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("sqlite:///blog.db")
+    print('yes')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -67,7 +74,7 @@ class Comment(db.Model):
 
 
 
-#db.create_all()
+db.create_all()
 
 @login_manager.user_loader
 def load_user(user_id):
