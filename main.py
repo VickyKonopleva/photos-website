@@ -28,14 +28,14 @@ gravatar = Gravatar(app, size=100, rating='g', default='retro', force_default=Fa
 
 ##CONNECT TO DB
 #weather database is set localy or it's PosgresDB on Heroku
-uri = os.getenv("DATABASE_URL")
-if uri and uri.startswith("postgres://"):
-    print(uri)
-    uri = uri.replace("postgres://", "postgresql://", 1)
-    app.config['SQLALCHEMY_DATABASE_URI'] = uri
-else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("sqlite:///blog.db")
-    print('yes')
+# uri = os.getenv("DATABASE_URL")
+# if uri and uri.startswith("postgres://"):
+#     print(uri)
+#     uri = uri.replace("postgres://", "postgresql://", 1)
+#     app.config['SQLALCHEMY_DATABASE_URI'] = uri
+# else:
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL.replace('postgres://', 'postgresql://', 1)", "sqlite:///blog.db")
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
