@@ -1,55 +1,126 @@
 {% include "header.html" %}
 
-  <!-- Page Header -->
-  <header class="masthead" style="background-image: url('https://images.unsplash.com/photo-1470092306007-055b6797ca72?ixlib=rb-1.2.1&auto=format&fit=crop&w=668&q=80')">
-    <div class="overlay"></div>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="site-heading">
-            <h1>Victoria's Blog</h1>
-            <span class="subheading">A collection of random musings.</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
+				<!-- Banner -->
+					<section id="banner" class="major">
+						<div class="inner">
+							<header class="major">
+								{% if current_user.is_authenticated : %}
+								<h1>{{current_user.first_name}}, добро пожаловать в проект <br> «Фото Севера»!</h1>
+								{%else:%}
+								<h1>Добро пожаловать в проект <br> «Фото Севера»!</h1>
+								{%endif%}
+							</header>
+							<div class="content">
+								<p>Здесь можно увидеть фото северной природы, оценить их
+								и предложить свои! <br>Раз в месяц мы объявляем лучшее фото!</p>
 
-  <!-- Main Content -->
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-        {% for post in all_posts %}
-        <div class="post-preview">
-          <a href="{{ url_for('show_post', post_id=post.id) }}">
-            <h2 class="post-title">
-              {{post.title}}
-            </h2>
-            <h3 class="post-subtitle">
-              {{post.subtitle}}
-            </h3>
-          </a>
-          <p class="post-meta">Posted by
-            <a href="#">{{post.author.name}}</a>
-            on {{post.date}}
-          {%if current_user.id==1:%}
-            <a href="{{url_for('delete_post', post_id=post.id) }}">✘</a>
-          {%endif%}
-          </p>
-        </div>
-        <hr>
-        {% endfor %}
+								<ul class="actions">
+									{% if not current_user.is_authenticated : %}
+									<li><a href="#one" class="button next scrolly">Начать!</a></li>
+									{%else:%}
+									<li><a href="{{ url_for('add_new_photo')}}" class="button next scrolly">Добавить фото!</a></li>
+									{%endif%}
+								</ul>
+							</div>
+						</div>
+					</section>
 
+				<!-- Main -->
+					<div id="main">
+						<!-- One -->
+							<section id="one" class="tiles">
+								{% for photo in photos %}
+								<article>
+									<span class="image">
+										<img src={{photo.img_url}} alt="" />
+									</span>
+									<header class="major">
+										<h3><a href="{{ url_for('view_photo', photo_id=photo.id) }}" class="link">{{photo.photo_title}}</a></h3>
+										<p>Фото сделано: {{photo.photo_place}}</p>
+										<p>Голоса: {{photo.votes|length}}</p>
+									</header>
+								</article>
+								{% endfor %}
+							</section>
 
-        <!-- New Post -->
-        {%if current_user.id==1:%}
-        <div class="clearfix">
-          <a class="btn btn-primary float-right" href="{{url_for('add_new_post')}}">Create New Post</a>
-        </div>
-        {%endif%}
-      </div>
-    </div>
-  </div>
-  <hr>
+						<!-- Two -->
+							<section id="two">
+								<div class="inner">
+									<header class="major">
+										<h2>О проекте</h2>
+									</header>
+									{% if not current_user.is_authenticated : %}
+									<p>Регистрируйтесь, и вы сможете загружать свои фото и оценивать фото других.
+										Раз в месяц по итогам голосования выбирается лучшая фотография северной природы!</p>
+									{%else:%}
+									<p>Теперь вы сможете загружать свои фото и оценивать фото других.
+										Раз в месяц по итогам голосования выбирается лучшая фотография северной природы!
+									{%endif%}
+									<ul class="actions">
+										{% if not current_user.is_authenticated : %}
+										<li><a href="{{ url_for('register') }}" class="button next">Участвовать!</a></li>
+										{%else:%}
+										<li><a href="{{ url_for('add_new_photo') }}" class="button next">Добавить свое фото!</a></li>
+										{%endif%}
+									</ul>
+								</div>
+							</section>
+
+					</div>
+
+				<!-- Contact -->
+					<section id="contact">
+						<div class="inner">
+							<section>
+								<form method="post" action="#">
+									<div class="fields">
+										<div class="field half">
+											<label for="name">Name</label>
+											<input type="text" name="name" id="name" />
+										</div>
+										<div class="field half">
+											<label for="email">Email</label>
+											<input type="text" name="email" id="email" />
+										</div>
+										<div class="field">
+											<label for="message">Message</label>
+											<textarea name="message" id="message" rows="6"></textarea>
+										</div>
+									</div>
+									<ul class="actions">
+										<li><input type="submit" value="Send Message" class="primary" /></li>
+										<li><input type="reset" value="Clear" /></li>
+									</ul>
+								</form>
+							</section>
+							<section class="split">
+								<section>
+									<div class="contact-method">
+										<span class="icon solid alt fa-envelope"></span>
+										<h3>Email</h3>
+										<a href="#">information@untitled.tld</a>
+									</div>
+								</section>
+								<section>
+									<div class="contact-method">
+										<span class="icon solid alt fa-phone"></span>
+										<h3>Phone</h3>
+										<span>(000) 000-0000 x12387</span>
+									</div>
+								</section>
+								<section>
+									<div class="contact-method">
+										<span class="icon solid alt fa-home"></span>
+										<h3>Address</h3>
+										<span>1234 Somewhere Road #5432<br />
+										Nashville, TN 00000<br />
+										United States of America</span>
+									</div>
+								</section>
+							</section>
+						</div>
+					</section>
+
 
 {% include "footer.html" %}
+

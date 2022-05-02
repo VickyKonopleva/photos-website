@@ -4,23 +4,24 @@ from wtforms.validators import DataRequired, URL
 from flask_ckeditor import CKEditorField
 
 ##WTForm
-class CreatePostForm(FlaskForm):
-    title = StringField("Blog Post Title", validators=[DataRequired()])
-    subtitle = StringField("Subtitle", validators=[DataRequired()])
-    img_url = StringField("Blog Image URL", validators=[DataRequired(), URL()])
-    body = CKEditorField("Blog Content", validators=[DataRequired()])
-    submit = SubmitField("Submit Post")
+class AddPhotoForm(FlaskForm):
+    photo_title = StringField("Название", validators=[DataRequired()])
+    photo_place = StringField("Где сделано фото", validators=[DataRequired()])
+    img_url = StringField("Ссылка URL на фото", validators=[DataRequired(), URL()])
+    submit = SubmitField("Добавить фото!")
 
 class RegisterForm(FlaskForm):
-    name=StringField("Your name", validators=[DataRequired()])
-    email=StringField("Your Email", validators=[DataRequired()])
-    password=PasswordField("Password", validators=[DataRequired()])
-    submit = SubmitField("Register!")
+    first_name=StringField("Имя", validators=[DataRequired()])
+    last_name = StringField("Фамилия", validators=[DataRequired()])
+    department = StringField("Филиал", validators=[DataRequired()])
+    email=StringField("Email", validators=[DataRequired()])
+    password=PasswordField("Пароль", validators=[DataRequired()])
+    submit = SubmitField("Зарегистрироваться!")
 
 class LoginForm(FlaskForm):
-    email = StringField("Your Email", validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired()])
-    submit = SubmitField("Login!")
+    email = StringField("Ваш E-mail", validators=[DataRequired()])
+    password = PasswordField("Пароль", validators=[DataRequired()])
+    submit = SubmitField("Войти!")
 
 class CommentForm(FlaskForm):
     body = CKEditorField("Comment", validators=[DataRequired()])
