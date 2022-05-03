@@ -21,9 +21,20 @@
 											{{photo.photo_author.department}}</p>
 											<p> Фото опубликовано: {{photo.date}}</p>
 											<p>Голоса: {{photo.votes|length}}</p>
+
 											<ul class="actions">
-												<li><a href="{{ url_for('vote_for_photo', photo_id=photo.id)}}" class="button">Оценить </a></li>
-												<i class="icon alt fa-solid fa-fire" ></i>
+												{% set ns = namespace(user_already_voted=false) %}
+												{%for vote in photo.votes:%}
+													{%if vote.voting_user.id == current_user.id:%}
+														{% set ns.user_already_voted = true %}
+													{%endif%}
+												{%endfor%}
+												{%if not ns.user_already_voted:%}
+												<h3>Оценить</h3>
+												<li><a href="{{ url_for('vote_for_photo', photo_id=photo.id)}}" ><span class="iconify" data-icon="ant-design:fire-outlined" data-width="40"></span></a></li>
+												{%else:%}
+												<h3>Вы уже оценили это фото!</h3>
+												{%endif%}
 											</ul>
 										</div>
 									</div>

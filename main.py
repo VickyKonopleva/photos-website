@@ -84,7 +84,7 @@ def load_user(user_id):
 @app.route('/')
 def get_all_photos():
     photos = Photo.query.all()
-    return render_template("index.html" , photos = photos)
+    return render_template("index.html" , photos = sorted(photos, key=lambda photo: len(photo.votes), reverse=True))
 
 @app.route('/pho')
 def get_land():
@@ -95,9 +95,6 @@ def get_land():
 def vote_for_photo():
     photo_id = request.args.get('photo_id')
     requested_photo = Photo.query.get(photo_id)
-    photo_likes = requested_photo.votes
-    # if photo_likes == None:
-    #     photo_likes = 0
     new_vote= Vote(
         voting_user = current_user,
         parent_photo = requested_photo,
@@ -128,11 +125,9 @@ def login():
                 login_user(user)
                 return redirect(url_for('get_all_photos'))
             else:
-                print("Invalid password")
-                flash("Invalid password")
+                flash("Неправильный пароль")
         else:
-            flash("User doesn't exist")
-            print("User doesn't exist")
+            flash("Пользователя с таким e-mail не существует")
     return render_template("login.html", form=form)
 
 @app.route('/register', methods=["POST", "GET"])
@@ -157,8 +152,7 @@ def register():
             login_user(new_user)
             return redirect(url_for('get_all_photos'))
         else:
-            print("Ooops")
-            flash("User already exists")
+            flash("Пользователь с таким e-mail уже зарегистрирован")
             # return redirect(url_for('login'))
     return render_template("register.html", form=form)
 
