@@ -7,9 +7,9 @@
 					<div id="main">
 							<section id="two" class="spotlights">
 								<section>
-									<a href="generic.html" class="image">
-										<img src="{{photo.img_url}}" alt="" data-position="center center" />
-									</a>
+									<div class="image">
+										<img  src="{{photo.img_url}}" alt="" style="" />
+									</div>
 									<div class="content">
 										<div class="inner">
 											<header class="major">
@@ -29,13 +29,20 @@
 														{% set ns.user_already_voted = true %}
 													{%endif%}
 												{%endfor%}
+												{%if not current_user.id==photo.photo_author.id:%}
 												{%if not ns.user_already_voted:%}
-												<h3>Оценить</h3>
+												<h3 style="padding-left:22px;">Оценить</h3>
 												<li><a href="{{ url_for('vote_for_photo', photo_id=photo.id)}}" ><span class="iconify" data-icon="ant-design:fire-outlined" data-width="40"></span></a></li>
 												{%else:%}
-												<h3>Вы уже оценили это фото!</h3>
+												<h3 style="padding-left:22px;">Вы уже оценили это фото!</h3>
+												{%endif%}
 												{%endif%}
 											</ul>
+											{%if (current_user.id==1) or (photo.photo_author.id == current_user.id):%}
+											<div>
+											<a class="button" style="margin-bottom: 30px;" href="{{url_for('delete_photo', photo_id=photo.id)}}">Удалить фото</a>
+											</div>
+											{%endif%}
 										</div>
 									</div>
 								</section>

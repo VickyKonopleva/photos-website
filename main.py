@@ -169,7 +169,7 @@ def view_photo():
     return render_template("view_photo.html", photo=requested_photo)
 
 
-@app.route("/new-post", methods=["GET", "POST"])
+@app.route("/new-photo", methods=["GET", "POST"])
 # @admin_only
 def add_new_photo():
     form = AddPhotoForm()
@@ -185,6 +185,25 @@ def add_new_photo():
         db.session.commit()
         return redirect(url_for("get_all_photos"))
     return render_template("make-photo.html", form=form)
+
+def admin_only(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        photo_id = request.args.get('photo_id')
+        photo = Photo.query.get(photo_id)
+        if not current_user.is_authenticated or (photo.photo_author.id != current_user.id and current_user.id != 1) :
+            return abort(403)
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route("/delete_photo",  methods=["GET", "POST"])
+@admin_only
+def delete_photo():
+    photo_id = request.args.get('photo_id')
+    photo_to_delete = Photo.query.get(photo_id)
+    db.session.delete(photo_to_delete)
+    db.session.commit()
+    return redirect(url_for('get_all_photos'))
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
