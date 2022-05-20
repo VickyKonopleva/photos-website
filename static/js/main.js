@@ -116,6 +116,20 @@
 			}
 		});
 
+// Scrolly2.
+		$('.scrolly2').scrolly({
+			offset: function() {
+				return $header.height() - 60;
+			}
+		});
+
+// Scrolly3.
+		$('.scrolly3').scrolly({
+			offset: function() {
+				return $header.height() - 80;
+			}
+		});
+
 	// Tiles.
 		var $tiles = $('.tiles > article');
 

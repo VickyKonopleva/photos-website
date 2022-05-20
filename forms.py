@@ -10,6 +10,11 @@ class AddPhotoForm(FlaskForm):
     img_url = StringField("Ссылка URL на фото", validators=[DataRequired(), URL()])
     submit = SubmitField("Добавить фото!")
 
+class EditPhotoForm(FlaskForm):
+    photo_title = StringField("Название", validators=[DataRequired()])
+    photo_place = StringField("Где сделано фото", validators=[DataRequired()])
+    submit = SubmitField("Отредактировать описание!")
+
 class RegisterForm(FlaskForm):
     first_name=StringField("Имя", validators=[DataRequired()])
     last_name = StringField("Фамилия", validators=[DataRequired()])
@@ -24,6 +29,6 @@ class LoginForm(FlaskForm):
     submit = SubmitField("Войти!")
 
 class CommentForm(FlaskForm):
-    body = CKEditorField("Comment", validators=[DataRequired()])
-    submit = SubmitField("Comment it!")
+    body = CKEditorField("Комментарий", validators=[DataRequired()])
+    submit = SubmitField("Комментровать!")
 

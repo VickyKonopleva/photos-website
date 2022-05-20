@@ -1,3 +1,5 @@
+import random
+
 from flask import Flask, render_template, redirect, url_for, flash, abort, request
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
@@ -8,12 +10,12 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import Table, Column, Integer, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user
-from forms import AddPhotoForm, RegisterForm, LoginForm, CommentForm
+from forms import AddPhotoForm, RegisterForm, LoginForm, CommentForm, EditPhotoForm
 from flask_gravatar import Gravatar
 from functools import wraps
 import os
 
-
+#конфигурация
 login_manager=LoginManager()
 Base = declarative_base()
 
@@ -29,7 +31,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
-##CONFIGURE TABLES
+#Конфигурация баз данных
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
@@ -76,25 +78,24 @@ class Vote(db.Model):
 
 # db.create_all()
 
-
+#логин_менеджер
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+#загрузить домашнюю страницу со всеми фото
 @app.route('/')
 def get_all_photos():
     photos = Photo.query.all()
     return render_template("index.html" , photos = sorted(photos, key=lambda photo: len(photo.votes), reverse=True))
 
-@app.route('/pho')
-def get_land():
-    requested_photo = Photo.query.get(1)
-    return render_template("view_photo.html", photo=requested_photo)
-
+#проголосовать за фото
 @app.route('/vote')
 def vote_for_photo():
+    # получить выбранное фото из базы данных
     photo_id = request.args.get('photo_id')
     requested_photo = Photo.query.get(photo_id)
+    # загрузить новый голос в базу
     new_vote= Vote(
         voting_user = current_user,
         parent_photo = requested_photo,
@@ -104,18 +105,13 @@ def vote_for_photo():
     db.session.commit()
     return redirect(url_for('get_all_photos'))
 
-# @app.route("/about")
-# def about():
-#     return render_template("about.html")
-#
-#
-# @app.route("/contact")
-# def contact():
-#     return render_template("contact.html")
-
+# войти на сайт под своей учетной записью
 @app.route('/login', methods=["POST", "GET"])
 def login():
+    # форма для входа в свую учетную запись
     form=LoginForm()
+    # действия по проверке введенных пользователем в форму данных (сверка их с данными из базы)
+    # если введенный логин-пароль совпадают, то успешный вход, иначе - предупреждение flash об ошибке
     if form.validate_on_submit():
         user_emal = form["email"].data
         user_password = form["password"].data
@@ -130,15 +126,19 @@ def login():
             flash("Пользователя с таким e-mail не существует")
     return render_template("login.html", form=form)
 
+# зарегистрировать нового пользователя
 @app.route('/register', methods=["POST", "GET"])
 def register():
+    # регистрационная форма
     form=RegisterForm()
+    # создание нового пользователся в базе данных
     if form.validate_on_submit():
         user_first_name=form["first_name"].data
         user_last_name = form["last_name"].data
         user_departmnet = form["department"].data
         user_password=form["password"].data
         user_emal = form["email"].data
+        # проверка, не сущетвует ли уже в базе пользователь с таким же email
         if not db.session.query(User).filter_by(email=user_emal).first():
 
             new_user=User( first_name=user_first_name,
@@ -156,23 +156,30 @@ def register():
             # return redirect(url_for('login'))
     return render_template("register.html", form=form)
 
+# выход из учетной записи пользователя
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('get_all_photos'))
 
-
+# просмотр фото из ленты
 @app.route("/photo", methods=["GET", "POST"])
 def view_photo():
+    # форма для комментария (!!отключена)
+    form = CommentForm()
+    # получение из базы данных запрошенного фото
     photo_id = request.args.get('photo_id')
     requested_photo = Photo.query.get(photo_id)
-    return render_template("view_photo.html", photo=requested_photo)
+    # перемешивание массива с проголосовавшими за фото пользователями
+    votes = sorted(requested_photo.votes, key=lambda voting_user: random.random())
+    return render_template("view_photo.html", photo=requested_photo, comment_form = form, votes = votes)
 
-
+# добавление нового фото
 @app.route("/new-photo", methods=["GET", "POST"])
-# @admin_only
 def add_new_photo():
+    # форма для добавления фото
     form = AddPhotoForm()
+    # добавление фото в базу данных
     if form.validate_on_submit():
         new_photo = Photo(
             photo_title=form.photo_title.data,
@@ -186,7 +193,8 @@ def add_new_photo():
         return redirect(url_for("get_all_photos"))
     return render_template("make-photo.html", form=form)
 
-def admin_only(f):
+# декоратор для доступа к редактированию и удалению фото только для админа и автора фото
+def admin_and_author_only(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         photo_id = request.args.get('photo_id')
@@ -196,11 +204,35 @@ def admin_only(f):
         return f(*args, **kwargs)
     return decorated_function
 
+# редактирование фото (доступно только для автора и админа фото)
+@app.route("/edit-photo", methods=["GET", "POST"])
+@admin_and_author_only
+def edit_photo():
+    # запрос к базе данных для получения фото для редактирования
+    photo_id = request.args.get('photo_id')
+    photo_to_edit = Photo.query.get(photo_id)
+    # форма для редактирования фото
+    edit_form = EditPhotoForm(
+        photo_title=photo_to_edit.photo_title,
+        photo_place=photo_to_edit.photo_place,
+    )
+    # загрузить исправленные данные по фото в базу данных
+    if edit_form.validate_on_submit():
+        photo_to_edit.photo_title = edit_form.photo_title.data
+        photo_to_edit.photo_place = edit_form.photo_place.data
+        db.session.commit()
+        return redirect(url_for("view_photo", photo_id=photo_to_edit.id))
+
+    return render_template("make-photo.html", form=edit_form, is_edit=True)
+
+# удалить фото (доступно только для автора и админа фото)
 @app.route("/delete_photo",  methods=["GET", "POST"])
-@admin_only
+@admin_and_author_only
 def delete_photo():
+    # запросить у базы данных фото для удаления
     photo_id = request.args.get('photo_id')
     photo_to_delete = Photo.query.get(photo_id)
+    # удалить запрошенное фото
     db.session.delete(photo_to_delete)
     db.session.commit()
     return redirect(url_for('get_all_photos'))

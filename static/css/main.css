@@ -3962,3 +3962,20 @@ header.masthead {
   position: relative;
   background-size: cover;
 }
+
+.edit_delete_buttons {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#photo_details {
+    padding-right: 200px;
+}
+
+
+
+
+

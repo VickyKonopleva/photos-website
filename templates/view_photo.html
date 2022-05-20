@@ -1,4 +1,4 @@
-
+{% import "bootstrap/wtf.html" as wtf %}
 {% include "header.html" %}
 
 
@@ -7,11 +7,31 @@
 					<div id="main">
 							<section id="two" class="spotlights">
 								<section>
+									<div>
 									<div class="image">
 										<img  src="{{photo.img_url}}" alt="" style="" />
+										</div>
+<!--										{% if current_user.is_authenticated : %}-->
+<!--									  {%if comment_form:%}-->
+<!--									  {{ ckeditor.load() }}-->
+<!--									{{ ckeditor.config(name='body') }}-->
+<!--									{{ wtf.quick_form(comment_form, novalidate=True, button_map={"submit": "primary"}) }}-->
+<!--									  {%endif%}-->
+<!--										{%endif%}-->
+<!--										Если данное фото было загружено текущим пользователем или зашел админ,-->
+<!--										то должны быть кнопки "редактировать описание фото" и "удалить фото"-->
+										{%if (current_user.id==1) or (photo.photo_author.id == current_user.id):%}
+
+											<div class="edit_delete_buttons">
+											<a class="edit_delete_buttons button"  href="{{url_for('edit_photo', photo_id=photo.id)}}">Редактировать</a>
+
+											<a class="edit_delete_buttons button"  href="{{url_for('delete_photo', photo_id=photo.id)}}">Удалить фото</a>
+											</div>
+
+											{%endif%}
 									</div>
 									<div class="content">
-										<div class="inner">
+										<div class="inner" id="photo_details">
 											<header class="major">
 												<h3>{{photo.photo_title}}</h3>
 											</header>
@@ -21,7 +41,21 @@
 											{{photo.photo_author.department}}</p>
 											<p> Фото опубликовано: {{photo.date}}</p>
 											<p>Голоса: {{photo.votes|length}}</p>
-
+											{%if photo.votes:%}
+											<p>Фото оценили:
+												{% set ns = namespace(number=0) %}
+												{%for vote in votes if (ns.number < 4):%}
+													{% set ns.number = ns.number + 1 %}
+													{%if (ns.number != votes|length) and (ns.number < 4):%}
+														{{vote.voting_user.first_name}} {{vote.voting_user.last_name}},
+													{%elif ns.number == votes|length:%}
+														{{vote.voting_user.first_name}} {{vote.voting_user.last_name}}
+													{%elif ns.number >= 4:%}
+														{{vote.voting_user.first_name}} {{vote.voting_user.last_name}} и др.</p>
+													{%endif%}
+												{%endfor%}
+											{%endif%}
+											{% if current_user.is_authenticated : %}
 											<ul class="actions">
 												{% set ns = namespace(user_already_voted=false) %}
 												{%for vote in photo.votes:%}
@@ -38,11 +72,8 @@
 												{%endif%}
 												{%endif%}
 											</ul>
-											{%if (current_user.id==1) or (photo.photo_author.id == current_user.id):%}
-											<div>
-											<a class="button" style="margin-bottom: 30px;" href="{{url_for('delete_photo', photo_id=photo.id)}}">Удалить фото</a>
-											</div>
 											{%endif%}
+
 										</div>
 									</div>
 								</section>
