@@ -7,9 +7,9 @@
 					<div id="main">
 							<section id="two" class="spotlights">
 								<section>
-									<div>
+									<div >
 									<div class="image">
-										<img  src="{{photo.img_url}}" alt="" style="" />
+										<img  class="the_very_image" src="{{photo.img_url}}" alt="" style="" />
 										</div>
 <!--										{% if current_user.is_authenticated : %}-->
 <!--									  {%if comment_form:%}-->
@@ -28,7 +28,7 @@
 											<a class="edit_delete_buttons button"  href="{{url_for('delete_photo', photo_id=photo.id)}}">Удалить фото</a>
 											</div>
 
-											{%endif%}
+										{%endif%}
 									</div>
 									<div class="content">
 										<div class="inner" id="photo_details">
