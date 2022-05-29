@@ -2886,6 +2886,15 @@ input, select, textarea {
 				max-height: 30em;
 				min-height: 20em;
 			}
+			.networks_wrapper {
+			    display: flex;
+			}
+			.qr_wrapper {
+                padding-top: 30px;
+                padding-left: 30px;
+                padding-right: 30px;
+                padding-bottom: 10px;
+            }
 
 		}
 
@@ -2894,10 +2903,24 @@ input, select, textarea {
 			.tiles article {
 				width: 50% !important;
 			}
+			.networks_wrapper {
+			    display: flex;
+			}
+
+			.qr_wrapper {
+                padding-top: 30px;
+                padding-left: 30px;
+                padding-right: 30px;
+                padding-bottom: 10px;
+             }
 
 		}
 
 		@media screen and (max-width: 736px) {
+
+		    .networks_wrapper {
+			    display: flex;;
+			}
 
 			.tiles article {
 				padding: 3em 1.5em 1em 1.5em ;
@@ -2905,6 +2928,13 @@ input, select, textarea {
 				max-height: none;
 				min-height: 0;
 			}
+
+			.qr_wrapper {
+                padding-top: 30px;
+                padding-left: 30px;
+                padding-right: 30px;
+                padding-bottom: 10px;
+            }
 
 				.tiles article h3 {
 					font-size: 1.5em;
@@ -2917,11 +2947,18 @@ input, select, textarea {
 			.tiles {
 				display: block;
 			}
+			.networks_wrapper {
+			    display: block;
+			    padding: 0;
+			}
+			.qr_wrapper {
+			    padding: 0;
+			}
 
-				.tiles article {
-					height: 20em;
-					width: 100% !important;
-				}
+            .tiles article {
+                height: 20em;
+                width: 100% !important;
+            }
 
 		}
 
@@ -4005,15 +4042,9 @@ max-width: 100%;
 
 .networks_wrapper {
     text-align: center;
-    display: flex;
 }
 
-.qr_wrapper {
-    padding-top: 30px;
-    padding-left: 30px;
-    padding-left: 30px;
-    padding-bottom: 10px;
-}
+
 
 
 
