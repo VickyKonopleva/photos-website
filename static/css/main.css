@@ -2878,6 +2878,23 @@ input, select, textarea {
 				background-color: #87c5a4;
 			}
 
+			.networks_wrapper {
+			    display: flex;
+			}
+			.qr_wrapper {
+                padding-top: 30px;
+                padding-left: 30px;
+                padding-right: 30px;
+                padding-bottom: 10px;
+            }
+
+            .bigHeader {
+				display: inline;
+				}
+				.smallHeader {
+				display: none;
+				}
+
 		@media screen and (max-width: 1280px) {
 
 			.tiles article {
@@ -2940,6 +2957,13 @@ input, select, textarea {
 					font-size: 1.5em;
 				}
 
+				.bigHeader {
+				display: none;
+				}
+				.smallHeader {
+				display: inline;
+				}
+
 		}
 
 		@media screen and (max-width: 480px) {
@@ -2959,6 +2983,13 @@ input, select, textarea {
                 height: 20em;
                 width: 100% !important;
             }
+
+            .bigHeader {
+				display: none;
+				}
+				.smallHeader {
+				display: inline;
+				}
 
 		}
 
