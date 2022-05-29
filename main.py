@@ -11,7 +11,6 @@ from sqlalchemy import Table, Column, Integer, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user
 from forms import AddPhotoForm, RegisterForm, LoginForm, CommentForm, EditPhotoForm
-from flask_gravatar import Gravatar
 from functools import wraps
 import os
 
@@ -44,6 +43,7 @@ class User(UserMixin, db.Model):
     photos = relationship("Photo", back_populates="photo_author")
     comments=relationship("Comment", back_populates="comment_author")
     votes_given=relationship("Vote", back_populates="voting_user")
+    # verification = db.Column(db.Boolean, dafault = False)
 
 class Photo(db.Model):
     __tablename__ = 'photos'

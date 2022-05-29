@@ -22,11 +22,10 @@
 <!--										то должны быть кнопки "редактировать описание фото" и "удалить фото"-->
 										{%if (current_user.id==1) or (photo.photo_author.id == current_user.id):%}
 
-											<div class="edit_delete_buttons">
-											<a class="edit_delete_buttons button"  href="{{url_for('edit_photo', photo_id=photo.id)}}">Редактировать</a>
-
-											<a class="edit_delete_buttons button"  href="{{url_for('delete_photo', photo_id=photo.id)}}">Удалить фото</a>
-											</div>
+										<div class="buttons_wrap clearfix">
+											<a class="button_custom button" href="{{url_for('edit_photo', photo_id=photo.id)}}">Редактировать</a>
+											<a class="button_custom button" href="{{url_for('delete_photo', photo_id=photo.id)}}">Удалить фото</a>
+										</div>
 
 										{%endif%}
 									</div>

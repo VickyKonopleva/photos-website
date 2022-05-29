@@ -5,15 +5,32 @@
 						<div class="inner">
 							<header class="major">
 								{% if current_user.is_authenticated : %}
-								<h1>{{current_user.first_name}}, добро пожаловать в проект <br> «Фото Севера»!</h1>
+								<h1 >{{current_user.first_name}}, добро пожаловать в проект <br> «Фото Севера»!</h1>
 								{%else:%}
 								<h1>Добро пожаловать в проект <br> «Фото Севера»!</h1>
 								{%endif%}
+								<h2 style="margin: 0 0 0 0;">Подписывайся на Профсоюз в соцсетях! </h2>
+								<div class="networks_wrapper">
+									<div class="qr_wrapper">
+									<img class="telegram_qr" src="http://qrcoder.ru/code/?https%3A%2F%2Ft.me%2Fgdu_profsouz&2&0" width="66" height="66" border="0" title="QR код"/>
+									<p>Telegram</p>
+								</div>
+								<div class="qr_wrapper">
+									<img src="http://qrcoder.ru/code/?https%3A%2F%2Fvk.com%2Funionfederation&2&0" width="66" height="66" border="0" title="QR код">
+									<p>Вконтакте</p>
+								</div>
+									<div class="qr_wrapper">
+									<img src="http://qrcoder.ru/code/?https%3A%2F%2Fwww.youtube.com%2Fchannel%2FUC9OI6vTwRThPXz17ezwyz4g%2Fvideos&2&0" width="66" height="66" border="0" title="QR код">
+									<p>YouTube</p>
+								</div>
+								</div>
+
 							</header>
 							<div class="content">
 								<p>Здесь можно увидеть фото северной природы, оценить их
-								и предложить свои! <br>Раз в месяц мы объявляем лучшее фото!</p>
-
+								и предложить свои! <br>Раз в месяц мы объявляем лучшее фото! <br>
+								Обязательным условием участия в конкурсе фото является подписка на все наши соцсети!<br>
+								 </p>
 								<ul class="actions">
 									{% if not current_user.is_authenticated : %}
 									<li><a href="#one" class="button next scrolly">Начать!</a></li>
